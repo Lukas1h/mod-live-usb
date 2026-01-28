@@ -25,7 +25,7 @@ jobs:
       - name: pack toolchain
         run: |
           tar -C ${{ env.WORKDIR }} -czf workdir-toolchain-${{ env.CACHE_VERSION }}.tar.gz generic-x86_64
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: workdir-toolchain-${{ env.CACHE_VERSION }}
           path: workdir-toolchain-${{ env.CACHE_VERSION }}.tar.gz
@@ -42,7 +42,7 @@ jobs:
       - uses: jpribyl/action-docker-layer-caching@v0.1.1
         with:
           key: docker-layer-for-mod-os-${{ env.CACHE_VERSION }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: workdir-toolchain-${{ env.CACHE_VERSION }}
           path: /home/runner
@@ -58,7 +58,7 @@ jobs:
       - name: pack bootstrap
         run: |
           tar -C ${{ env.WORKDIR }} -czf workdir-bootstrap-${{ env.CACHE_VERSION }}.tar.gz generic-x86_64
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: workdir-bootstrap-${{ env.CACHE_VERSION }}
           path: workdir-bootstrap-${{ env.CACHE_VERSION }}.tar.gz
@@ -75,7 +75,7 @@ jobs:
       - uses: jpribyl/action-docker-layer-caching@v0.1.1
         with:
           key: docker-layer-for-mod-os-${{ env.CACHE_VERSION }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: workdir-bootstrap-${{ env.CACHE_VERSION }}
           path: /home/runner
@@ -94,7 +94,7 @@ jobs:
       - name: pack mod-os
         run: |
           tar -C ${{ env.WORKDIR }} -czf workdir-mod-os-${{ env.CACHE_VERSION }}.tar.gz generic-x86_64
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: workdir-mod-os-${{ env.CACHE_VERSION }}
           path: workdir-mod-os-${{ env.CACHE_VERSION }}.tar.gz
@@ -158,7 +158,7 @@ jobs:
       - uses: jpribyl/action-docker-layer-caching@v0.1.1
         with:
           key: docker-layer-for-iso-${{ env.CACHE_VERSION }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: workdir-mod-os-${{ env.CACHE_VERSION }}
           path: /home/runner
@@ -183,7 +183,7 @@ jobs:
           touch mod-os/.stamp_built
           ln -sf ${{ env.WORKDIR }}/generic-x86_64/images/rootfs.ext2 mod-os/rootfs.ext2
           make iso
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: iso
           path: archiso/output/*.iso
