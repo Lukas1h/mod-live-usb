@@ -8,30 +8,7 @@ env:
   WORKDIR: /home/runner/mod-workdir
 
 jobs:
-  toolchain:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          key: toolchain-${{ env.CACHE_VERSION }}
-          path: ${{ env.WORKDIR }}
-      - uses: jpribyl/action-docker-layer-caching@v0.1.1
-        with:
-          key: docker-layer-for-mod-os-${{ env.CACHE_VERSION }}
-      - name: make toolchain
-        run: |
-          make toolchain
-      - name: pack toolchain
-        run: |
-          tar -C ${{ env.WORKDIR }} -czf workdir-toolchain-${{ env.CACHE_VERSION }}.tar.gz generic-x86_64
-      - uses: actions/upload-artifact@v4
-        with:
-          name: workdir-toolchain-${{ env.CACHE_VERSION }}
-          path: workdir-toolchain-${{ env.CACHE_VERSION }}.tar.gz
-
   bootstrap:
-    needs: toolchain
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
@@ -42,19 +19,14 @@ jobs:
       - uses: jpribyl/action-docker-layer-caching@v0.1.1
         with:
           key: docker-layer-for-mod-os-${{ env.CACHE_VERSION }}
-      - uses: actions/download-artifact@v4
-        with:
-          name: workdir-toolchain-${{ env.CACHE_VERSION }}
-          path: /home/runner
-      - name: Extract workdir-toolchain-${{ env.CACHE_VERSION }}
-        shell: bash
+      - name: make toolchain
         run: |
-          mkdir -p ${{ env.WORKDIR }}
-          sudo tar -C ${{ env.WORKDIR }} -x --overwrite -f ~/workdir-toolchain-${{ env.CACHE_VERSION }}.tar.gz
+          make toolchain
+
       - name: make bootstrap
         run: |
-          touch toolchain/.stamp_built
           make bootstrap
+
       - name: pack bootstrap
         run: |
           tar -C ${{ env.WORKDIR }} -czf workdir-bootstrap-${{ env.CACHE_VERSION }}.tar.gz generic-x86_64
